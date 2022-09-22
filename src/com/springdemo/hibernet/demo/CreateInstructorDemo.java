@@ -1,5 +1,8 @@
 package com.springdemo.hibernet.demo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -19,23 +22,34 @@ public class CreateInstructorDemo {
 		Session session = factory.getCurrentSession();
 
 		try {
+			// start transaction
+			session.beginTransaction();
+
 			// create objects
 			Instructor TempInstructor = new Instructor("Saddam", "Mrida", "saddam@domain.edu");
 
 			InstructorDetail tempInstructorDetail = new InstructorDetail("youtube.com/saddam9922", "Gardening");
 
-			// Associate objects
+			// Associate objects instructor details
 			TempInstructor.setInstructorDetailId(tempInstructorDetail);
 
-			// start transaction
-			session.beginTransaction();
+			// associate objects courses;
+			List<Course> courses = 
+					new ArrayList<Course>();
+			
+			Course tempCourse1 = new Course("course1");
+			courses.add(tempCourse1);
 
-			//
-			// save the instructor data
-			//
-			// it will save instructor details also
-			// as it is cascading.....
-			//
+			tempCourse1 = new Course("course2");
+			courses.add(tempCourse1);
+
+			tempCourse1 = new Course("course3");
+			courses.add(tempCourse1);
+
+			// set courses
+			TempInstructor.setCourses(courses);
+			
+			//save the instructor
 			session.save(TempInstructor);
 
 			session.getTransaction().commit();
